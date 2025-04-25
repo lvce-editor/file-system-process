@@ -32,6 +32,7 @@ const options = {
     'electron',
     'execa',
     'ws',
+    'trash',
   ],
   plugins: [
     babel({
