@@ -1,0 +1,24 @@
+{
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./packages/e2e"
+    },
+    {
+      "path": "./packages/build"
+    },
+    {
+      "path": "./packages/file-system-process"
+    },
+    {
+      "path": "./packages/test-integration"
+    },
+    {
+      "path": "./packages/memory"
+    },
+    {
+      "path": "./packages/server"
+    }
+  ]
+}
