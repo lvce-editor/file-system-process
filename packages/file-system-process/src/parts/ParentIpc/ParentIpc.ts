@@ -26,11 +26,6 @@ export const listen = async () => {
   state.ipc = ipc
 }
 
-// @ts-ignore
-export const invoke = (method, ...params: readonly any[]) => {
+export const invoke = (method: string, ...params: readonly any[]) => {
   return JsonRpc.invoke(state.ipc, method, ...params)
-}
-// @ts-ignore
-export const invokeAndTransfer = (method, ...params: readonly any[]) => {
-  return JsonRpc.invokeAndTransfer(state.ipc, method, ...params)
 }
