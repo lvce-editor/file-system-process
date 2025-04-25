@@ -3,6 +3,7 @@ import * as FileSystemDisk from '../FileSystemDisk/FileSystemDisk.ts'
 export const commandMap = {
   'FileSystem.chmod': FileSystemDisk.chmod,
   'FileSystem.copy': FileSystemDisk.copy,
+  'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,
   'FileSystem.getPathSeparator': FileSystemDisk.getPathSeparator,
   'FileSystem.mkdir': FileSystemDisk.mkdir,
   'FileSystem.readDirWithFileTypes': FileSystemDisk.readDirWithFileTypes,
@@ -12,5 +13,4 @@ export const commandMap = {
   'FileSystem.rename': FileSystemDisk.rename,
   'FileSystem.stat': FileSystemDisk.stat,
   'FileSystem.writeFile': FileSystemDisk.writeFile,
-  'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,
 }
