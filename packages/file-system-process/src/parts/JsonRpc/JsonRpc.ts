@@ -1,1 +1,1 @@
-export * from '@lvce-editor/json-rpc'
+export { invokeAndTransfer, invoke } from '@lvce-editor/json-rpc'
