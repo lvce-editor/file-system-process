@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@lvce-editor/rpc": "^2.2.0",
+    "@lvce-editor/rpc": "^3.0.0",
     "execa": "^9.5.2",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.2"
