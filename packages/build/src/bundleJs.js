@@ -23,21 +23,7 @@ const options = {
       objectShorthand: true,
     },
   },
-  external: [
-    '@lvce-editor/ripgrep',
-    '@lvce-editor/rpc',
-    '@lvce-editor/ipc',
-    '@lvce-editor/json-rpc',
-    '@lvce-editor/assert',
-    '@lvce-editor/verror',
-    'electron',
-    'execa',
-    'tmp-promise',
-    'open',
-    'tail',
-    'ws',
-    'trash',
-  ],
+  external: ['@lvce-editor/ripgrep', 'electron', 'execa', 'tmp-promise', 'open', 'tail', 'ws', 'trash'],
   plugins: [
     babel({
       babelHelpers: 'bundled',
