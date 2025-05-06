@@ -13,8 +13,8 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/node": "^22.14.0",
-    "esbuild": "^0.25.3",
+    "esbuild": "^0.25.4",
     "execa": "^9.5.2",
-    "rollup": "^4.40.1"
+    "rollup": "^4.40.2"
   }
 }
