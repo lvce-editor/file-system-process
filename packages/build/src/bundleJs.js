@@ -22,6 +22,7 @@ const options = {
       constBindings: true,
       objectShorthand: true,
     },
+    inlineDynamicImports: true,
   },
   external: ['@lvce-editor/ripgrep', 'electron', 'execa', 'tmp-promise', 'open', 'tail', 'ws', 'trash'],
   plugins: [
