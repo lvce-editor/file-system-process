@@ -1,3 +1,4 @@
+import type { Dirent, Mode } from 'node:fs'
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
@@ -12,8 +13,7 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as Trash from '../Trash/Trash.ts'
 import { VError } from '../VError/VError.ts'
 
-// @ts-ignore
-const assertUri = (uri) => {
+const assertUri = (uri: string): void => {
   if (!uri.startsWith('file://')) {
     throw new Error(`path must be a valid file uri`)
   }
@@ -38,19 +38,11 @@ export const copy = async (sourceUri: string, targetUri: string): Promise<void> 
   }
 }
 
-/**
- *
- * @param {string} uri
- * @param {BufferEncoding} encoding
- * @returns
- */
-// @ts-ignore
-export const readFile = async (uri, encoding = EncodingType.Utf8) => {
+export const readFile = async (uri: string, encoding: BufferEncoding = EncodingType.Utf8) => {
   try {
     Assert.string(uri)
     assertUri(uri)
     const path = fileURLToPath(uri)
-    // @ts-ignore
     const content = await fs.readFile(path, encoding)
     return content
   } catch (error) {
@@ -61,14 +53,7 @@ export const readFile = async (uri, encoding = EncodingType.Utf8) => {
   }
 }
 
-/**
- *
- * @param {string} uri
- * @param {string} content
- * @param {BufferEncoding} encoding
- */
-// @ts-ignore
-export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
+export const writeFile = async (uri: string, content: string, encoding: BufferEncoding = EncodingType.Utf8) => {
   try {
     assertUri(uri)
     Assert.string(uri)
@@ -76,7 +61,6 @@ export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
     const path = fileURLToPath(uri)
     // queue would be more correct for concurrent writes but also slower
     // Queue.add(`writeFile/${path}`, () =>
-    // @ts-ignore
     await fs.writeFile(path, content, encoding)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
@@ -86,8 +70,7 @@ export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   }
 }
 
-// @ts-ignore
-const isOkayToRemove = (path) => {
+const isOkayToRemove = (path: string): boolean => {
   if (path === '/') {
     return false
   }
@@ -100,8 +83,7 @@ const isOkayToRemove = (path) => {
   return true
 }
 
-// @ts-ignore
-export const remove = async (uri) => {
+export const remove = async (uri: string): Promise<void> => {
   assertUri(uri)
   const path = fileURLToPath(uri)
   if (!isOkayToRemove(path)) {
@@ -118,8 +100,7 @@ export const remove = async (uri) => {
   }
 }
 
-// @ts-ignore
-export const forceRemove = async (uri) => {
+export const forceRemove = async (uri: string): Promise<void> => {
   assertUri(uri)
   const path = fileURLToPath(uri)
   if (!isOkayToRemove(path)) {
@@ -133,8 +114,7 @@ export const forceRemove = async (uri) => {
   }
 }
 
-// @ts-ignore
-export const exists = async (uri) => {
+export const exists = async (uri: string): Promise<boolean> => {
   try {
     assertUri(uri)
     // @ts-ignore
@@ -146,19 +126,14 @@ export const exists = async (uri) => {
   }
 }
 
-/**
- * @param {import('fs').Dirent} dirent
- */
-// @ts-ignore
-const toPrettyDirent = (dirent) => {
+const toPrettyDirent = (dirent: Dirent): any => {
   return {
     name: dirent.name,
     type: GetDirentType.getDirentType(dirent),
   }
 }
 
-// @ts-ignore
-export const readDirWithFileTypes = async (uri) => {
+export const readDirWithFileTypes = async (uri: string): Promise<readonly any[]> => {
   try {
     assertUri(uri)
     const path = fileURLToPath(uri)
@@ -170,8 +145,7 @@ export const readDirWithFileTypes = async (uri) => {
   }
 }
 
-// @ts-ignore
-export const readDir = async (uri) => {
+export const readDir = async (uri: string): Promise<readonly string[]> => {
   try {
     const path = fileURLToPath(uri)
     const dirents = await fs.readdir(path)
@@ -184,8 +158,7 @@ export const readDir = async (uri) => {
   }
 }
 
-// @ts-ignore
-export const mkdir = async (uri) => {
+export const mkdir = async (uri: string): Promise<void> => {
   try {
     assertUri(uri)
     const path = fileURLToPath(uri)
@@ -195,8 +168,7 @@ export const mkdir = async (uri) => {
   }
 }
 
-// @ts-ignore
-const fallbackRename = async (oldUri, newUri) => {
+const fallbackRename = async (oldUri: string, newUri: string): Promise<void> => {
   try {
     const oldPath = fileURLToPath(oldUri)
     const newPath = fileURLToPath(newUri)
@@ -207,8 +179,7 @@ const fallbackRename = async (oldUri, newUri) => {
   }
 }
 
-// @ts-ignore
-export const rename = async (oldUri, newUri) => {
+export const rename = async (oldUri: string, newUri: string): Promise<void> => {
   try {
     const oldPath = fileURLToPath(oldUri)
     const newPath = fileURLToPath(newUri)
@@ -221,27 +192,23 @@ export const rename = async (oldUri, newUri) => {
   }
 }
 
-export const getPathSeparator = () => {
+export const getPathSeparator = (): string => {
   return '/'
 }
 
-// TODO handle error
-// @ts-ignore
-export const stat = async (uri) => {
+export const stat = async (uri: string): Promise<number> => {
   const path = fileURLToPath(uri)
   const stats = await fs.stat(path)
   const type = GetDirentType.getDirentType(stats)
   return type
 }
 
-// @ts-ignore
-export const chmod = async (uri, permissions) => {
+export const chmod = async (uri: string, permissions: Mode): Promise<void> => {
   const path = fileURLToPath(uri)
   await fs.chmod(path, permissions)
 }
 
-// @ts-ignore
-export const copyFile = async (fromUri, toUri) => {
+export const copyFile = async (fromUri: string, toUri: string): Promise<void> => {
   try {
     const fromPath = fileURLToPath(fromUri)
     const toPath = fileURLToPath(toUri)
@@ -251,8 +218,7 @@ export const copyFile = async (fromUri, toUri) => {
   }
 }
 
-// @ts-ignore
-export const cp = async (fromUri, toUri) => {
+export const cp = async (fromUri: string, toUri: string): Promise<void> => {
   try {
     const fromPath = fileURLToPath(fromUri)
     const toPath = fileURLToPath(toUri)
@@ -262,8 +228,7 @@ export const cp = async (fromUri, toUri) => {
   }
 }
 
-// @ts-ignore
-export const readJson = async (uri) => {
+export const readJson = async (uri: string): Promise<any> => {
   try {
     Assert.string(uri)
     assertUri(uri)
@@ -279,8 +244,7 @@ export const readJson = async (uri) => {
   }
 }
 
-// @ts-ignore
-export const getFolderSize = async (uri) => {
+export const getFolderSize = async (uri: string): Promise<number> => {
   const path = fileURLToPath(uri)
   const total = await GetFolderSizeInternal.getFolderSizeInternal(path)
   return total
