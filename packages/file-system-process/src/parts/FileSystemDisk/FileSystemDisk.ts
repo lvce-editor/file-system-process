@@ -100,32 +100,6 @@ export const remove = async (uri: string): Promise<void> => {
   }
 }
 
-export const forceRemove = async (uri: string): Promise<void> => {
-  assertUri(uri)
-  const path = fileURLToPath(uri)
-  if (!isOkayToRemove(path)) {
-    console.warn('not removing path')
-    return
-  }
-  try {
-    await fs.rm(path, { force: true, recursive: true })
-  } catch (error) {
-    throw new VError(error, `Failed to remove "${uri}"`)
-  }
-}
-
-export const exists = async (uri: string): Promise<boolean> => {
-  try {
-    assertUri(uri)
-    // @ts-ignore
-    const path = fileURLToPath(uri)
-    await fs.access(uri)
-    return true
-  } catch {
-    return false
-  }
-}
-
 const toPrettyDirent = (dirent: Dirent): any => {
   return {
     name: dirent.name,
@@ -141,19 +115,6 @@ export const readDirWithFileTypes = async (uri: string): Promise<readonly any[]>
     const prettyDirents = dirents.map(toPrettyDirent)
     return prettyDirents
   } catch (error) {
-    throw new VError(error, `Failed to read directory "${uri}"`)
-  }
-}
-
-export const readDir = async (uri: string): Promise<readonly string[]> => {
-  try {
-    const path = fileURLToPath(uri)
-    const dirents = await fs.readdir(path)
-    return dirents
-  } catch (error) {
-    if (IsEnoentError.isEnoentError(error)) {
-      throw new FileNotFoundError(uri)
-    }
     throw new VError(error, `Failed to read directory "${uri}"`)
   }
 }
@@ -206,26 +167,6 @@ export const stat = async (uri: string): Promise<number> => {
 export const chmod = async (uri: string, permissions: Mode): Promise<void> => {
   const path = fileURLToPath(uri)
   await fs.chmod(path, permissions)
-}
-
-export const copyFile = async (fromUri: string, toUri: string): Promise<void> => {
-  try {
-    const fromPath = fileURLToPath(fromUri)
-    const toPath = fileURLToPath(toUri)
-    await fs.copyFile(fromPath, toPath)
-  } catch (error) {
-    throw new VError(error, `Failed to copy file from ${fromUri} to ${toUri}`)
-  }
-}
-
-export const cp = async (fromUri: string, toUri: string): Promise<void> => {
-  try {
-    const fromPath = fileURLToPath(fromUri)
-    const toPath = fileURLToPath(toUri)
-    await fs.cp(fromPath, toPath, { recursive: true })
-  } catch (error) {
-    throw new VError(error, `Failed to copy folder from ${fromUri} to ${toUri}`)
-  }
 }
 
 export const readJson = async (uri: string): Promise<any> => {
