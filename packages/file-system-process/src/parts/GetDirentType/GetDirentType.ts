@@ -1,10 +1,7 @@
+import type { Dirent, StatsBase } from 'node:fs'
 import * as DirentType from '../DirentType/DirentType.ts'
 
-/**
- * @param {import('fs').Dirent|import('fs').StatsBase} dirent
- */
-// @ts-ignore
-export const getDirentType = (dirent) => {
+export const getDirentType = (dirent: Dirent | StatsBase<number>): number => {
   if (dirent.isFile()) {
     return DirentType.File
   }
