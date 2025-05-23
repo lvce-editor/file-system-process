@@ -1,4 +1,5 @@
 import * as FileSystemDisk from '../FileSystemDisk/FileSystemDisk.ts'
+import * as HandleElectronMessagePort from '../HandleElectronMessagePort/HandleElectronMessagePort.ts'
 import * as HandleWebSocket from '../HandleWebSocket/HandleWebSocket.ts'
 
 export const commandMap = {
@@ -15,4 +16,5 @@ export const commandMap = {
   'FileSystem.stat': FileSystemDisk.stat,
   'FileSystem.writeFile': FileSystemDisk.writeFile,
   'HandleWebSocket.handleWebSocket': HandleWebSocket.handleWebSocket,
+  'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
 }
