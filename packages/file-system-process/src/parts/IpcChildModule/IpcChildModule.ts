@@ -1,10 +1,11 @@
+import type {
+  Rpc} from '@lvce-editor/rpc';
 import {
   ElectronMessagePortRpcClient,
   ElectronUtilityProcessRpcClient,
   NodeForkedProcessRpcClient,
   NodeWebSocketRpcClient,
-  NodeWorkerRpcClient,
-  Rpc,
+  NodeWorkerRpcClient
 } from '@lvce-editor/rpc'
 import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
