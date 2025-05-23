@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs'
-import * as ParentIpc from '../ParentIpc/ParentIpc.ts'
+import * as MainProcess from '../MainProcess/MainProcess.ts'
 
-// @ts-ignore
-export const trash = async (path) => {
+export const trash = async (path: string): Promise<void> => {
   if (!existsSync(path)) {
     return
   }
-  await ParentIpc.invoke('Trash.trash', path)
+  // @ts-ignore
+  await MainProcess.invoke('Trash.trash', path)
 }
