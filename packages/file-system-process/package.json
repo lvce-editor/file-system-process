@@ -53,11 +53,11 @@
     "trash": "^9.0.0"
   },
   "devDependencies": {
-    "@jest/globals": "^30.0.0",
+    "@jest/globals": "^30.0.2",
     "@lvce-editor/rpc-registry": "^2.27.0",
     "@types/node": "^20.11.24",
-    "electron": "^36.4.0",
-    "jest": "^30.0.0",
+    "electron": "^36.5.0",
+    "jest": "^30.0.2",
     "ts-jest": "^29.4.0"
   },
   "engines": {
