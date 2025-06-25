@@ -3,7 +3,7 @@ import * as IsEnoentErrorWindows from '../IsEnoentErrorWindows/IsEnoentErrorWind
 
 // @ts-ignore
 const isEnoentErrorLinux = (error) => {
-  return error.code === ErrorCodes.ENOENT
+  return error && error.code === ErrorCodes.ENOENT
 }
 
 // @ts-ignore
