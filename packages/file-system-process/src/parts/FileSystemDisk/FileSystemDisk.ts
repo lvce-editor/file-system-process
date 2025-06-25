@@ -38,7 +38,7 @@ export const copy = async (sourceUri: string, targetUri: string): Promise<void> 
   }
 }
 
-export const readFile = async (uri: string, encoding: BufferEncoding = EncodingType.Utf8) => {
+export const readFile = async (uri: string, encoding: BufferEncoding = EncodingType.Utf8): Promise<string> => {
   try {
     Assert.string(uri)
     assertUri(uri)
@@ -53,7 +53,7 @@ export const readFile = async (uri: string, encoding: BufferEncoding = EncodingT
   }
 }
 
-export const writeFile = async (uri: string, content: string, encoding: BufferEncoding = EncodingType.Utf8) => {
+export const writeFile = async (uri: string, content: string, encoding: BufferEncoding = EncodingType.Utf8): Promise<void> => {
   try {
     assertUri(uri)
     Assert.string(uri)
@@ -100,7 +100,7 @@ export const remove = async (uri: string): Promise<void> => {
   }
 }
 
-const toPrettyDirent = (dirent: Dirent): any => {
+const toPrettyDirent = (dirent: Readonly<Dirent>): unknown => {
   return {
     name: dirent.name,
     type: GetDirentType.getDirentType(dirent),

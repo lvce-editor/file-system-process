@@ -1,7 +1,7 @@
 // @ts-ignore
-export const isEnoentErrorWindows = (error) => {
-  if (!error || !error.message) {
+export const isEnoentErrorWindows = (error: unknown): boolean => {
+  if (!error || !(error as { message?: string }).message) {
     return false
   }
-  return error.message.includes('The system cannot find the path specified.')
+  return (error as { message: string }).message.includes('The system cannot find the path specified.')
 }
