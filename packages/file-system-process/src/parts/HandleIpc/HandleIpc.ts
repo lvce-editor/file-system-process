@@ -4,6 +4,6 @@ export const handleIpc = (ipc) => {
 }
 
 // @ts-ignore
-const unhandleIpc = (ipc) => {
+export const unhandleIpc = (ipc) => {
   // TODO
 }

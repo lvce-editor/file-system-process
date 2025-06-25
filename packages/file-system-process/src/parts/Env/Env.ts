@@ -1,3 +1,3 @@
-export const getElectronRunAsNode = () => {
-  return process.env.ELECTRON_RUN_AS_NODE
+export const getElectronRunAsNode = (): string => {
+  return process.env.ELECTRON_RUN_AS_NODE || ''
 }
