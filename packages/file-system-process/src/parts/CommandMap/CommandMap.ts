@@ -1,9 +1,11 @@
+import * as AddRecentlyOpenedPath from '../AddRecentlyOpenedPath/AddRecentlyOpenedPath.ts'
 import * as FileSystemDisk from '../FileSystemDisk/FileSystemDisk.ts'
 import * as HandleElectronMessagePort from '../HandleElectronMessagePort/HandleElectronMessagePort.ts'
 import * as HandleWebSocket from '../HandleWebSocket/HandleWebSocket.ts'
 import * as Initialize from '../Initialize/Initialize.ts'
 
 export const commandMap = {
+  'FileSystem.addRecentlyOpenedPath': AddRecentlyOpenedPath.addRecentlyOpenedPath,
   'FileSystem.chmod': FileSystemDisk.chmod,
   'FileSystem.copy': FileSystemDisk.copy,
   'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,
