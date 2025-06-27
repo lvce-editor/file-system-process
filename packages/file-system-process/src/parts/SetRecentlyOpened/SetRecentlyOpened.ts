@@ -1,7 +1,7 @@
 import { dirname } from 'node:path'
 import { mkdir, writeFile } from '../FileSystemDisk/FileSystemDisk.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
-import * as Json from '../Json/Json.js'
+import * as Json from '../Json/Json.ts'
 
 export const setRecentlyOpened = async (recentlyOpenedPath: string, newRecentlyOpened: readonly string[]): Promise<void> => {
   const stringified = Json.stringify(newRecentlyOpened)
