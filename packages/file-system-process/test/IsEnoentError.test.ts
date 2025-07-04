@@ -1,6 +1,6 @@
 import { test, expect } from '@jest/globals'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
-import * as IsEnoentError from '../src/parts/IsEnoentError/IsEnoentError.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
+import * as IsEnoentError from '../src/parts/IsEnoentError/IsEnoentError.ts'
 
 test('isEnoentError returns false for null', () => {
   const result = IsEnoentError.isEnoentError(null)
