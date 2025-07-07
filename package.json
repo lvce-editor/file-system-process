@@ -11,7 +11,7 @@
   "type": "module",
   "scripts": {
     "build": "node packages/build/src/build.js",
-    "build:watch": "",
+    "build:watch": "./packages/build/node_modules/.bin/esbuild --format=esm --platform=node --bundle --external:electron --external:trash --external:ws --watch packages/file-system-process/src/fileSystemProcessMain.ts --outfile=packages/file-system-process/dist/index.js",
     "dev": "node packages/build/src/dev.js",
     "format": "prettier --write .",
     "lint": "eslint .",

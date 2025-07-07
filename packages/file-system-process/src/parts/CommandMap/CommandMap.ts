@@ -2,6 +2,7 @@ import * as FileSystemDisk from '../FileSystemDisk/FileSystemDisk.ts'
 import * as HandleElectronMessagePort from '../HandleElectronMessagePort/HandleElectronMessagePort.ts'
 import * as HandleWebSocket from '../HandleWebSocket/HandleWebSocket.ts'
 import * as Initialize from '../Initialize/Initialize.ts'
+import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.ts'
 
 export const commandMap = {
   'FileSystem.chmod': FileSystemDisk.chmod,
@@ -19,4 +20,5 @@ export const commandMap = {
   'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
   'HandleWebSocket.handleWebSocket': HandleWebSocket.handleWebSocket,
   'Initialize.initialize': Initialize.initialize,
+  'TemporaryMessagePort.handlePorts': TemporaryMessagePort.handlePorts,
 }
