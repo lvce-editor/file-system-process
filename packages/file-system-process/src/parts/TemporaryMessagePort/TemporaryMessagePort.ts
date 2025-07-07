@@ -1,4 +1,3 @@
-import type { MessagePort } from 'node:worker_threads'
 import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.ts'
@@ -21,7 +20,7 @@ export const getPortTuple = async (): Promise<any> => {
   }
 }
 
-export const handlePorts = (port1: MessagePort, port2: MessagePort, id1: number, id2: number): void => {
+export const handlePorts = (port1: any, port2: any, id1: number, id2: number): void => {
   Assert.number(id1)
   Assert.number(id2)
   Assert.object(port1)
