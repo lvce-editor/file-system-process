@@ -1,3 +1,5 @@
-import { MainProcess } from '@lvce-editor/rpc-registry'
+import { createLazyRpc, MainProcess, RpcId } from '@lvce-editor/rpc-registry'
 
-export const { invoke, invokeAndTransfer, set } = MainProcess
+export const { set } = MainProcess
+
+export const { invoke, setFactory } = createLazyRpc(RpcId.MainProcess)
