@@ -1,5 +1,5 @@
 import { test, expect } from '@jest/globals'
-import * as MainProcess from '../src/parts/MainProcess/MainProcess.js'
+import * as MainProcess from '../src/parts/MainProcess/MainProcess.ts'
 
 test('MainProcess exports invoke function', () => {
   expect(typeof MainProcess.invoke).toBe('function')
