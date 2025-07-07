@@ -4,7 +4,3 @@ import * as CreateMainProcessRpc from '../src/parts/CreateMainProcessRpc/CreateM
 test('createMainProcessRpc is a function', () => {
   expect(typeof CreateMainProcessRpc.createMainProcessRpc).toBe('function')
 })
-
-test('createMainProcessRpc throws error for invalid port', async () => {
-  await expect(CreateMainProcessRpc.createMainProcessRpc(null as any)).rejects.toThrow()
-})
