@@ -2,6 +2,7 @@ import type { MessagePort } from 'node:worker_threads'
 import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.ts'
+import { RpcId } from '@lvce-editor/rpc-registry'
 
 export const state = {
   ports: Object.create(null),
@@ -11,7 +12,7 @@ export const getPortTuple = async (): Promise<any> => {
   const id1 = Id.create()
   const id2 = Id.create()
   // @ts-ignore
-  await SharedProcess.invoke('TemporaryMessagePort.getPortTuple2', id1, id2)
+  await SharedProcess.invoke('TemporaryMessagePort.getPortTuple3', id1, id2, RpcId.FileSystemProcess)
   const port1 = state.ports[id1]
   const port2 = state.ports[id2]
   delete state.ports[id1]
