@@ -6,5 +6,5 @@ test('handleElectronMessagePort is a function', () => {
 })
 
 test('handleElectronMessagePort throws error for invalid messagePort', async () => {
-  await expect(HandleElectronMessagePort.handleElectronMessagePort(null, 'param1')).rejects.toThrow()
+  await expect(HandleElectronMessagePort.handleElectronMessagePort(null, 0)).rejects.toThrow()
 })

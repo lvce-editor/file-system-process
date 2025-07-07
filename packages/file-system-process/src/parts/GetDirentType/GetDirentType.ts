@@ -1,7 +1,7 @@
 import type { Dirent, StatsBase } from 'node:fs'
 import * as DirentType from '../DirentType/DirentType.ts'
 
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+ 
 export const getDirentType = (dirent: Dirent | StatsBase<number>): number => {
   if (dirent.isFile()) {
     return DirentType.File
