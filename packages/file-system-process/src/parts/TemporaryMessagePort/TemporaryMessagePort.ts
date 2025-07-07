@@ -1,7 +1,7 @@
+import { RpcId } from '@lvce-editor/rpc-registry'
 import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.ts'
-import { RpcId } from '@lvce-editor/rpc-registry'
 
 const ports = Object.create(null)
 
