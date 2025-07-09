@@ -3,6 +3,7 @@ import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { bundleJs } from './bundleJs.js'
 import { root } from './root.js'
+import { getWsVersionFromLockfile } from './getWsVersionFromLockfile.js'
 
 const dist = join(root, '.tmp', 'dist')
 
@@ -69,6 +70,8 @@ delete packageJson.dependencies['@lvce-editor/assert']
 delete packageJson.dependencies['@lvce-editor/rpc']
 delete packageJson.dependencies['@lvce-editor/json-rpc']
 delete packageJson.dependencies['@lvce-editor/verror']
+const wsVersion = await getWsVersionFromLockfile()
+packageJson.dependencies['ws'] = wsVersion
 packageJson.version = version
 packageJson.main = 'dist/index.js'
 
