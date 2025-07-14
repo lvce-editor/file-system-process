@@ -1,4 +1,4 @@
-import type { Dirent, Mode } from 'node:fs'
+import { type Dirent, type Mode, existsSync } from 'node:fs'
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
@@ -127,6 +127,12 @@ export const mkdir = async (uri: string): Promise<void> => {
   } catch (error) {
     throw new VError(error, `Failed to create directory "${uri}"`)
   }
+}
+
+export const exists = async (uri: string): Promise<boolean> => {
+  assertUri(uri)
+  const path = fileURLToPath(uri)
+  return existsSync(path)
 }
 
 const fallbackRename = async (oldUri: string, newUri: string): Promise<void> => {
