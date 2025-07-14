@@ -7,6 +7,7 @@ import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessageP
 export const commandMap = {
   'FileSystem.chmod': FileSystemDisk.chmod,
   'FileSystem.copy': FileSystemDisk.copy,
+  'FileSystem.exists': FileSystemDisk.rename,
   'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,
   'FileSystem.getPathSeparator': FileSystemDisk.getPathSeparator,
   'FileSystem.mkdir': FileSystemDisk.mkdir,
