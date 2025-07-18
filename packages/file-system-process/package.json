@@ -48,15 +48,15 @@
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.4.0",
-    "@lvce-editor/rpc": "^4.7.0",
+    "@lvce-editor/rpc": "^4.11.0",
     "@lvce-editor/verror": "^1.7.0",
     "trash": "^9.0.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@lvce-editor/rpc-registry": "^2.49.0",
+    "@lvce-editor/rpc-registry": "^2.57.0",
     "@types/node": "^22.15.33",
-    "electron": "^37.2.0",
+    "electron": "^37.2.3",
     "jest": "^29.7.0",
     "ts-jest": "^29.4.0"
   },
