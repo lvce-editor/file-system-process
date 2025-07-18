@@ -4,6 +4,7 @@ import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import * as Assert from '../Assert/Assert.ts'
+import { assertUri } from '../AssertUri/AssertUri.ts'
 import * as EncodingType from '../EncodingType/EncodingType.ts'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.ts'
@@ -12,12 +13,6 @@ import * as GetFolderSizeInternal from '../GetFolderSizeInternal/GetFolderSizeIn
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as Trash from '../Trash/Trash.ts'
 import { VError } from '../VError/VError.ts'
-
-const assertUri = (uri: string): void => {
-  if (!uri.startsWith('file://')) {
-    throw new Error(`path must be a valid file uri`)
-  }
-}
 
 export const copy = async (sourceUri: string, targetUri: string): Promise<void> => {
   try {
