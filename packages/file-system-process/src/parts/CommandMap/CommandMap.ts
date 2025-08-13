@@ -5,6 +5,7 @@ import * as Initialize from '../Initialize/Initialize.ts'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.ts'
 
 export const commandMap = {
+  'FileSystem.appendFile': FileSystemDisk.appendFile,
   'FileSystem.chmod': FileSystemDisk.chmod,
   'FileSystem.copy': FileSystemDisk.copy,
   'FileSystem.exists': FileSystemDisk.exists,
