@@ -1,7 +1,6 @@
 {
   "name": "@lvce-editor/file-system-process-test-integration",
   "version": "0.0.0-dev",
-  "description": "",
   "license": "MIT",
   "author": "Lvce Editor",
   "type": "module",
