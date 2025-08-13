@@ -65,6 +65,21 @@ export const writeFile = async (uri: string, content: string, encoding: BufferEn
   }
 }
 
+export const appendFile = async (uri: string, content: string): Promise<void> => {
+  try {
+    assertUri(uri)
+    Assert.string(uri)
+    Assert.string(content)
+    const path = fileURLToPath(uri)
+    await fs.appendFile(path, content)
+  } catch (error) {
+    if (IsEnoentError.isEnoentError(error)) {
+      throw new FileNotFoundError(uri)
+    }
+    throw new VError(error, `Failed to append to file "${uri}"`)
+  }
+}
+
 const isOkayToRemove = (path: string): boolean => {
   if (path === '/') {
     return false
