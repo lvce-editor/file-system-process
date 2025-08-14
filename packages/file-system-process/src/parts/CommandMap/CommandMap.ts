@@ -1,9 +1,9 @@
 import * as FileSystemDisk from '../FileSystemDisk/FileSystemDisk.ts'
+import * as FileWatcher from '../FileWatcher/FileWatcher.ts'
 import * as HandleElectronMessagePort from '../HandleElectronMessagePort/HandleElectronMessagePort.ts'
 import * as HandleWebSocket from '../HandleWebSocket/HandleWebSocket.ts'
 import * as Initialize from '../Initialize/Initialize.ts'
 import * as TemporaryMessagePort from '../TemporaryMessagePort/TemporaryMessagePort.ts'
-import * as FileWatcher from '../FileWatcher/FileWatcher.ts'
 
 export const commandMap = {
   'FileSystem.appendFile': FileSystemDisk.appendFile,
