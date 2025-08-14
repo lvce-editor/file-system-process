@@ -1,4 +1,5 @@
 import * as FileSystemDisk from '../FileSystemDisk/FileSystemDisk.ts'
+import * as FileWatcher from '../FileWatcher/FileWatcher.ts'
 import * as HandleElectronMessagePort from '../HandleElectronMessagePort/HandleElectronMessagePort.ts'
 import * as HandleWebSocket from '../HandleWebSocket/HandleWebSocket.ts'
 import * as Initialize from '../Initialize/Initialize.ts'
@@ -18,6 +19,8 @@ export const commandMap = {
   'FileSystem.remove': FileSystemDisk.remove,
   'FileSystem.rename': FileSystemDisk.rename,
   'FileSystem.stat': FileSystemDisk.stat,
+  'FileSystem.unwatchFile': FileWatcher.unwatchFile,
+  'FileSystem.watchFile': FileWatcher.watchFile,
   'FileSystem.writeFile': FileSystemDisk.writeFile,
   'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
   'HandleWebSocket.handleWebSocket': HandleWebSocket.handleWebSocket,
