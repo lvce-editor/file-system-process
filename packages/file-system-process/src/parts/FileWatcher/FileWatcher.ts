@@ -32,7 +32,7 @@ export const watchFile = async (socket: any, watcherId: number, uri: string): Pr
     // TODO handle error
     socket.send({
       jsonrpc: '2.0',
-      method: 'FileSystem.executeCallback',
+      method: 'FileSystem.executeWatchCallback',
       params: [watcherId],
     })
   }
