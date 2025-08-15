@@ -23,13 +23,18 @@ const setupWatcher = async (watcherId: number, uri: string, onChange: () => void
   }
 }
 
-export const watchFile = async (watcherId: number, uri: string): Promise<void> => {
+// TODO when socket closes, dispose file watcher for this socket
+export const watchFile = async (socket: any, watcherId: number, uri: string): Promise<void> => {
   assertUri(uri)
   fileWacherEvents[watcherId] = []
   // TODO await promise?
   const onChange = () => {
-    // console.log('did change')
-    // TODO send response via socket / messageport
+    // TODO handle error
+    socket.send({
+      jsonrpc: '2.0',
+      method: 'FileSystem.executeCallback',
+      params: [watcherId],
+    })
   }
   setupWatcher(watcherId, uri, onChange)
 }
