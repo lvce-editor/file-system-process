@@ -36,6 +36,8 @@ export const watchFile = async (socket: any, watcherId: number, uri: string): Pr
       params: [watcherId],
     })
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   setupWatcher(watcherId, uri, onChange)
 }
 
