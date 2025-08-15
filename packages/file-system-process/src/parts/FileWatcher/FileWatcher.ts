@@ -1,6 +1,6 @@
 import * as fs from 'node:fs/promises'
-import { assertUri } from '../AssertUri/AssertUri.ts'
 import { fileURLToPath } from 'node:url'
+import { assertUri } from '../AssertUri/AssertUri.ts'
 
 const fileWacherEvents: Record<number, readonly any[]> = Object.create(null)
 
