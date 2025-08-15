@@ -28,7 +28,7 @@ export const watchFile = async (socket: any, watcherId: number, uri: string): Pr
   assertUri(uri)
   fileWacherEvents[watcherId] = []
   // TODO await promise?
-  const onChange = () => {
+  const onChange = (): void => {
     // TODO handle error
     socket.send({
       jsonrpc: '2.0',
