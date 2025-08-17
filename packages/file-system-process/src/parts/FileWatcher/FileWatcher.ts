@@ -1,3 +1,4 @@
+import { VError } from '@lvce-editor/verror'
 import * as fs from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { assertUri } from '../AssertUri/AssertUri.ts'
@@ -19,7 +20,7 @@ const setupWatcher = async (watcherId: number, uri: string, onChange: () => void
     if (error && error.code === 'ENOENT') {
       return
     }
-    console.error(error)
+    console.error(new VError(error, `Failed to setup watcher for ${uri}`))
   }
 }
 
