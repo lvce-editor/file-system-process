@@ -22,6 +22,7 @@ export const commandMap = {
   'FileSystem.unwatchFile': FileWatcher.unwatchFile,
   'FileSystem.watchFile': FileWatcher.watchFile,
   'FileSystem.writeFile': FileSystemDisk.writeFile,
+  'FileSystem.writeBuffer': FileSystemDisk.writeBuffer,
   'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
   'HandleWebSocket.handleWebSocket': HandleWebSocket.handleWebSocket,
   'Initialize.initialize': Initialize.initialize,

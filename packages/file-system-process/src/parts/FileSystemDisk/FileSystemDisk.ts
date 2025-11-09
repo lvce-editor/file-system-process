@@ -65,6 +65,20 @@ export const writeFile = async (uri: string, content: string, encoding: BufferEn
   }
 }
 
+export const writeBuffer = async (uri: string, content: string, buffer: ArrayBuffer<Uint8Array>): Promise<void> => {
+  try {
+    assertUri(uri)
+    Assert.string(uri)
+    const path = fileURLToPath(uri)
+    await fs.writeFile(path, buffer)
+  } catch (error) {
+    if (IsEnoentError.isEnoentError(error)) {
+      throw new FileNotFoundError(uri)
+    }
+    throw new VError(error, `Failed to write to file "${uri}"`)
+  }
+}
+
 export const appendFile = async (uri: string, content: string): Promise<void> => {
   try {
     assertUri(uri)
