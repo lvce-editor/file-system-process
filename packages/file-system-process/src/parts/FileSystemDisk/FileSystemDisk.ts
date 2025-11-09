@@ -65,7 +65,7 @@ export const writeFile = async (uri: string, content: string, encoding: BufferEn
   }
 }
 
-export const writeBuffer = async (uri: string, content: string, buffer: ArrayBuffer<Uint8Array>): Promise<void> => {
+export const writeBuffer = async (uri: string, content: string, buffer: Uint8Array): Promise<void> => {
   try {
     assertUri(uri)
     Assert.string(uri)
