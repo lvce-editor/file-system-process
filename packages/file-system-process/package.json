@@ -47,18 +47,18 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/assert": "^1.4.0",
-    "@lvce-editor/rpc": "^4.19.0",
+    "@lvce-editor/assert": "^1.5.1",
+    "@lvce-editor/rpc": "^5.2.0",
     "@lvce-editor/verror": "^1.7.0",
-    "trash": "^10.0.0"
+    "trash": "^10.0.1"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
-    "@lvce-editor/rpc-registry": "^3.8.0",
-    "@types/node": "^22.15.33",
-    "electron": "^38.1.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.4.1"
+    "@jest/globals": "^30.2.0",
+    "@lvce-editor/rpc-registry": "^7.2.0",
+    "@types/node": "^25.0.7",
+    "electron": "^39.2.7",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6"
   },
   "engines": {
     "node": ">=22"

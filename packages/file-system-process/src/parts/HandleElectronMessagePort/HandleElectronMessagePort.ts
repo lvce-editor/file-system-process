@@ -6,8 +6,8 @@ import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 export const handleElectronMessagePort = async (messagePort: any, rpcId?: number): Promise<void> => {
   Assert.object(messagePort)
   const rpc = await IpcChild.listen({
-    method: IpcChildType.ElectronMessagePort,
     messagePort,
+    method: IpcChildType.ElectronMessagePort,
   })
   if (rpcId) {
     set(rpcId, rpc)
