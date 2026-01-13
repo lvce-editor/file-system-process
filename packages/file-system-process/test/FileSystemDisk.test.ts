@@ -27,31 +27,31 @@ jest.unstable_mockModule('node:fs/promises', () => ({
   rename: mockRename,
   rm: mockRm,
   stat: mockStat,
-  writeFile: mockWriteFile
+  writeFile: mockWriteFile,
 }))
 
 jest.unstable_mockModule('node:url', () => ({
-  fileURLToPath: mockFileURLToPath
+  fileURLToPath: mockFileURLToPath,
 }))
 
 jest.unstable_mockModule('node:os', () => ({
-  homedir: mockHomedir
+  homedir: mockHomedir,
 }))
 
 jest.unstable_mockModule('../src/parts/Trash/Trash.js', () => ({
-  trash: mockTrash
+  trash: mockTrash,
 }))
 
 jest.unstable_mockModule('../src/parts/IsEnoentError/IsEnoentError.js', () => ({
-  isEnoentError: mockIsEnoentError
+  isEnoentError: mockIsEnoentError,
 }))
 
 jest.unstable_mockModule('../src/parts/GetDirentType/GetDirentType.js', () => ({
-  getDirentType: mockGetDirentType
+  getDirentType: mockGetDirentType,
 }))
 
 jest.unstable_mockModule('../src/parts/GetFolderSizeInternal/GetFolderSizeInternal.js', () => ({
-  getFolderSizeInternal: mockGetFolderSizeInternal
+  getFolderSizeInternal: mockGetFolderSizeInternal,
 }))
 
 test('getPathSeparator should return forward slash', async (): Promise<void> => {
@@ -93,7 +93,9 @@ test('copy should handle same source and dest error', async (): Promise<void> =>
   mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
 
   const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
-  await expect(FileSystemDisk.copy('file:///same', 'file:///same')).rejects.toThrow('Failed to copy "file:///same" to "file:///same": src and dest cannot be the same')
+  await expect(FileSystemDisk.copy('file:///same', 'file:///same')).rejects.toThrow(
+    'Failed to copy "file:///same" to "file:///same": src and dest cannot be the same',
+  )
 })
 
 test('readFile should read file successfully', async (): Promise<void> => {
@@ -216,8 +218,26 @@ test('remove should throw VError when trash fails', async (): Promise<void> => {
 
 test('readDirWithFileTypes should read directory successfully', async (): Promise<void> => {
   const mockDirents = [
-    { isBlockDevice: (): boolean => false, isCharacterDevice: (): boolean => false, isDirectory: (): boolean => false, isFIFO: (): boolean => false, isFile: (): boolean => true, isSocket: (): boolean => false, isSymbolicLink: (): boolean => false, name: 'file1.txt' },
-    { isBlockDevice: (): boolean => false, isCharacterDevice: (): boolean => false, isDirectory: (): boolean => true, isFIFO: (): boolean => false, isFile: (): boolean => false, isSocket: (): boolean => false, isSymbolicLink: (): boolean => false, name: 'dir1' }
+    {
+      isBlockDevice: (): boolean => false,
+      isCharacterDevice: (): boolean => false,
+      isDirectory: (): boolean => false,
+      isFIFO: (): boolean => false,
+      isFile: (): boolean => true,
+      isSocket: (): boolean => false,
+      isSymbolicLink: (): boolean => false,
+      name: 'file1.txt',
+    },
+    {
+      isBlockDevice: (): boolean => false,
+      isCharacterDevice: (): boolean => false,
+      isDirectory: (): boolean => true,
+      isFIFO: (): boolean => false,
+      isFile: (): boolean => false,
+      isSocket: (): boolean => false,
+      isSymbolicLink: (): boolean => false,
+      name: 'dir1',
+    },
   ]
   // @ts-ignore
   mockReaddir.mockResolvedValue(mockDirents)
@@ -312,7 +332,9 @@ test('rename should throw VError for other rename errors', async (): Promise<voi
   mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
 
   const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
-  await expect(FileSystemDisk.rename('file:///old.txt', 'file:///new.txt')).rejects.toThrow('Failed to rename "file:///old.txt" to "file:///new.txt"')
+  await expect(FileSystemDisk.rename('file:///old.txt', 'file:///new.txt')).rejects.toThrow(
+    'Failed to rename "file:///old.txt" to "file:///new.txt"',
+  )
 })
 
 test('stat should get file stats successfully', async (): Promise<void> => {
@@ -323,7 +345,7 @@ test('stat should get file stats successfully', async (): Promise<void> => {
     isFIFO: (): boolean => false,
     isFile: (): boolean => true,
     isSocket: (): boolean => false,
-    isSymbolicLink: (): boolean => false
+    isSymbolicLink: (): boolean => false,
   }
   // @ts-ignore
   mockStat.mockResolvedValue(mockStats)
