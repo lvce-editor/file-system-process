@@ -4,7 +4,7 @@ import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
 export const listen = async (argv: readonly string[]): Promise<void> => {
   await IpcChild.listen({
-    method: IpcChildType.Auto(argv),
     commandMap: CommandMap.commandMap,
+    method: IpcChildType.Auto(argv),
   })
 }

@@ -19,15 +19,15 @@ const mockGetFolderSizeInternal = jest.fn()
 
 // Setup all mocks at the top
 jest.unstable_mockModule('node:fs/promises', () => ({
-  cp: mockCp,
-  readFile: mockReadFile,
-  writeFile: mockWriteFile,
-  readdir: mockReaddir,
-  mkdir: mockMkdir,
-  rename: mockRename,
-  stat: mockStat,
   chmod: mockChmod,
-  rm: mockRm
+  cp: mockCp,
+  mkdir: mockMkdir,
+  readdir: mockReaddir,
+  readFile: mockReadFile,
+  rename: mockRename,
+  rm: mockRm,
+  stat: mockStat,
+  writeFile: mockWriteFile
 }))
 
 jest.unstable_mockModule('node:url', () => ({
@@ -216,8 +216,8 @@ test('remove should throw VError when trash fails', async (): Promise<void> => {
 
 test('readDirWithFileTypes should read directory successfully', async (): Promise<void> => {
   const mockDirents = [
-    { name: 'file1.txt', isFile: (): boolean => true, isDirectory: (): boolean => false, isSymbolicLink: (): boolean => false, isSocket: (): boolean => false, isBlockDevice: (): boolean => false, isCharacterDevice: (): boolean => false, isFIFO: (): boolean => false },
-    { name: 'dir1', isFile: (): boolean => false, isDirectory: (): boolean => true, isSymbolicLink: (): boolean => false, isSocket: (): boolean => false, isBlockDevice: (): boolean => false, isCharacterDevice: (): boolean => false, isFIFO: (): boolean => false }
+    { isBlockDevice: (): boolean => false, isCharacterDevice: (): boolean => false, isDirectory: (): boolean => false, isFIFO: (): boolean => false, isFile: (): boolean => true, isSocket: (): boolean => false, isSymbolicLink: (): boolean => false, name: 'file1.txt' },
+    { isBlockDevice: (): boolean => false, isCharacterDevice: (): boolean => false, isDirectory: (): boolean => true, isFIFO: (): boolean => false, isFile: (): boolean => false, isSocket: (): boolean => false, isSymbolicLink: (): boolean => false, name: 'dir1' }
   ]
   // @ts-ignore
   mockReaddir.mockResolvedValue(mockDirents)
@@ -317,13 +317,13 @@ test('rename should throw VError for other rename errors', async (): Promise<voi
 
 test('stat should get file stats successfully', async (): Promise<void> => {
   const mockStats = {
-    isFile: (): boolean => true,
-    isDirectory: (): boolean => false,
-    isSymbolicLink: (): boolean => false,
-    isSocket: (): boolean => false,
     isBlockDevice: (): boolean => false,
     isCharacterDevice: (): boolean => false,
-    isFIFO: (): boolean => false
+    isDirectory: (): boolean => false,
+    isFIFO: (): boolean => false,
+    isFile: (): boolean => true,
+    isSocket: (): boolean => false,
+    isSymbolicLink: (): boolean => false
   }
   // @ts-ignore
   mockStat.mockResolvedValue(mockStats)
