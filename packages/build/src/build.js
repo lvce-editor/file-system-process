@@ -68,6 +68,7 @@ delete packageJson.directories
 delete packageJson.nodemonConfig
 delete packageJson.dependencies['@lvce-editor/assert']
 delete packageJson.dependencies['@lvce-editor/rpc']
+delete packageJson.dependencies['@lvce-editor/rpc-registry']
 delete packageJson.dependencies['@lvce-editor/json-rpc']
 delete packageJson.dependencies['@lvce-editor/verror']
 const wsVersion = await getWsVersionFromLockfile()
