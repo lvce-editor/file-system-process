@@ -1,15 +1,13 @@
-import { RpcId } from '@lvce-editor/rpc-registry'
+import { RpcId, SharedProcess } from '@lvce-editor/rpc-registry'
 import type { PortTuple } from '../PortTuple/PortTuple.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as Id from '../Id/Id.ts'
-import * as SharedProcess from '../SharedProcess/SharedProcess.ts'
 
 const ports = Object.create(null)
 
 export const getPortTuple = async (): Promise<PortTuple> => {
   const id1 = Id.create()
   const id2 = Id.create()
-  // @ts-ignore
   await SharedProcess.invoke('TemporaryMessagePort.getPortTuple3', id1, id2, RpcId.FileSystemProcess)
   const port1 = ports[id1]
   const port2 = ports[id2]

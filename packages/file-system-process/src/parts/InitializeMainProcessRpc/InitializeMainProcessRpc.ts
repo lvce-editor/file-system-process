@@ -1,7 +1,6 @@
 import { LazyTransferElectronMessagePortRpc } from '@lvce-editor/rpc'
-import { MainProcess, RpcId } from '@lvce-editor/rpc-registry'
+import { MainProcess, RpcId, SharedProcess } from '@lvce-editor/rpc-registry'
 import { getPortTuple } from '../GetPortTuple/GetPortTuple.ts'
-import * as SharedProcess from '../SharedProcess/SharedProcess.ts'
 
 export const initializeMainProcessRpc = async (): Promise<void> => {
   const rpc = await LazyTransferElectronMessagePortRpc.create({
