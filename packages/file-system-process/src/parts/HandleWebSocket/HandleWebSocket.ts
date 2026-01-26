@@ -1,6 +1,5 @@
+import { NodeWebSocketRpcClient } from '@lvce-editor/rpc'
 import * as Assert from '../Assert/Assert.ts'
-import * as IpcChild from '../IpcChild/IpcChild.ts'
-import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
 const requiresSocket = (method: string): boolean => {
   return method === 'FileSystem.watchFile'
@@ -9,9 +8,9 @@ const requiresSocket = (method: string): boolean => {
 export const handleWebSocket = async (handle: any, request: any): Promise<void> => {
   Assert.object(handle)
   Assert.object(request)
-  await IpcChild.listen({
+  await NodeWebSocketRpcClient.create({
+    commandMap: {},
     handle,
-    method: IpcChildType.WebSocket,
     request,
     requiresSocket,
   })
