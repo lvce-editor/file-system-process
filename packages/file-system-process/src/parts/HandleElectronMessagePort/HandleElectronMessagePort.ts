@@ -1,13 +1,13 @@
+import { ElectronMessagePortRpcClient } from '@lvce-editor/rpc'
 import { set } from '@lvce-editor/rpc-registry'
 import * as Assert from '../Assert/Assert.ts'
-import * as IpcChild from '../IpcChild/IpcChild.ts'
-import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
 export const handleElectronMessagePort = async (messagePort: any, rpcId?: number): Promise<void> => {
   Assert.object(messagePort)
-  const rpc = await IpcChild.listen({
+  const rpc = await ElectronMessagePortRpcClient.create({
+    commandMap: {},
     messagePort,
-    method: IpcChildType.ElectronMessagePort,
+    requiresSocket: false,
   })
   if (rpcId) {
     set(rpcId, rpc)
