@@ -22,7 +22,8 @@ const getRpc = (argv: readonly string[]): Promise<Rpc> => {
   throw new Error(`[file-system-process] unknown ipc type`)
 }
 
-export const initializeSharedProcessRpc = async (argv: readonly string[]): Promise<void> => {
+export const initializeParentProcessRpc = async (argv: readonly string[]): Promise<void> => {
   const rpc = await getRpc(argv)
+  // TODO we don't know at this point if we have been launched by shared process or electron main process
   SharedProcess.set(rpc)
 }
