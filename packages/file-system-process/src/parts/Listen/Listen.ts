@@ -1,10 +1,6 @@
-import * as CommandMap from '../CommandMap/CommandMap.ts'
-import * as IpcChild from '../IpcChild/IpcChild.ts'
-import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
+import { initializeMainProcessRpc } from '../InitializeMainProcessRpc/InitializeMainProcessRpc.ts'
+import { initializeSharedProcessRpc } from '../InitializeSharedProcessRpc/InitializeSharedProcessRpc.ts'
 
 export const listen = async (argv: readonly string[]): Promise<void> => {
-  await IpcChild.listen({
-    commandMap: CommandMap.commandMap,
-    method: IpcChildType.Auto(argv),
-  })
+  await Promise.all([initializeSharedProcessRpc(argv), initializeMainProcessRpc()])
 }
