@@ -8,7 +8,6 @@ export const initializeMainProcessRpc = async (): Promise<void> => {
     getPortTuple,
     async send(port) {
       await SharedProcess.invokeAndTransfer(
-        // @ts-ignore
         'TemporaryMessagePort.sendToElectron',
         port,
         RpcId.MainProcess,
