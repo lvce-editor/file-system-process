@@ -1,5 +1,5 @@
-import * as CreateMainProcessRpc from '../CreateMainProcessRpc/CreateMainProcessRpc.ts'
+import * as CreateMainProcessRpc from '../InitializeMainProcessRpc/InitializeMainProcessRpc.ts'
 
 export const initialize = async (): Promise<void> => {
-  await CreateMainProcessRpc.createMainProcessRpc()
+  await CreateMainProcessRpc.initializeMainProcessRpc()
 }
