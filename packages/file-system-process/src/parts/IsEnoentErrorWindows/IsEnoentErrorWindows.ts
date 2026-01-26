@@ -1,4 +1,3 @@
-// @ts-ignore
 export const isEnoentErrorWindows = (error: unknown): boolean => {
   if (!error || !(error as { message?: string }).message) {
     return false
