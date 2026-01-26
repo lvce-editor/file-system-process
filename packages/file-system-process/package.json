@@ -50,13 +50,13 @@
     "@lvce-editor/assert": "^1.5.1",
     "@lvce-editor/rpc": "^5.4.0",
     "@lvce-editor/verror": "^1.7.0",
-    "trash": "^10.0.1"
+    "trash": "^10.1.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.2.0",
-    "@lvce-editor/rpc-registry": "^7.3.0",
+    "@lvce-editor/rpc-registry": "^7.5.0",
     "@types/node": "^25.0.7",
-    "electron": "^39.2.7",
+    "electron": "^40.0.0",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.6"
   },
