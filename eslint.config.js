@@ -10,6 +10,7 @@ export default [
       'n/no-unsupported-features/node-builtins': 'off',
       'jest/no-restricted-jest-methods': 'off',
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
+      '@cspell/spellchecker': 'off',
     },
   },
   {
