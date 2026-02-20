@@ -16,4 +16,9 @@ export default [
       'no-console': 'off',
     },
   },
+  {
+    rules: {
+      '@cspell/spellchecker': 'off',
+    },
+  },
 ]
