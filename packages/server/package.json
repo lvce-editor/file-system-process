@@ -6,6 +6,9 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "scripts": {
+    "postinstall": "node src/postinstall.js"
+  },
   "dependencies": {
     "@lvce-editor/server": "^0.71.0"
   }
