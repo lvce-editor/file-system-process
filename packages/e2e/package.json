@@ -11,6 +11,6 @@
   "type": "module",
   "license": "MIT",
   "devDependencies": {
-    "@lvce-editor/test-with-playwright": "^16.0.0"
+    "@lvce-editor/test-with-playwright": "^17.0.0"
   }
 }
