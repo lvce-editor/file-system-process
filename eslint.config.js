@@ -5,6 +5,11 @@ export default [
   ...config.recommendedNode,
   {
     files: ['**/*.ts'],
+    settings: {
+      n: {
+        typescriptExtensionMap: [['.ts', '.js']],
+      },
+    },
     rules: {
       'jest/no-restricted-jest-methods': 'off',
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
