@@ -13,7 +13,7 @@
     "@lvce-editor/rpc": "^6.4.0",
     "execa": "^9.6.1",
     "jest": "^30.0.3",
-    "ts-jest": "^29.4.10"
+    "ts-jest": "^29.4.11"
   },
   "engines": {
     "node": ">=22"
