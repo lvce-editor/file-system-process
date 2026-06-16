@@ -49,16 +49,16 @@
   "dependencies": {
     "@lvce-editor/assert": "^1.5.1",
     "@lvce-editor/rpc": "^6.4.0",
-    "@lvce-editor/rpc-registry": "^9.23.0",
+    "@lvce-editor/rpc-registry": "^9.26.0",
     "@lvce-editor/verror": "^1.7.0",
     "trash": "^10.1.1"
   },
   "devDependencies": {
     "@jest/globals": "^30.2.0",
     "@types/node": "^25.0.7",
-    "electron": "^42.2.0",
+    "electron": "^42.4.0",
     "jest": "^30.2.0",
-    "ts-jest": "^29.4.10"
+    "ts-jest": "^29.4.11"
   },
   "engines": {
     "node": ">=24"
