@@ -7,6 +7,7 @@ test('commandMap contains expected commands', () => {
   expect(typeof CommandMap.commandMap['FileSystem.copy']).toBe('function')
   expect(typeof CommandMap.commandMap['FileSystem.getFolderSize']).toBe('function')
   expect(typeof CommandMap.commandMap['FileSystem.getPathSeparator']).toBe('function')
+  expect(typeof CommandMap.commandMap['FileSystem.isReadonly']).toBe('function')
   expect(typeof CommandMap.commandMap['FileSystem.mkdir']).toBe('function')
   expect(typeof CommandMap.commandMap['FileSystem.readDirWithFileTypes']).toBe('function')
   expect(typeof CommandMap.commandMap['FileSystem.readFile']).toBe('function')
