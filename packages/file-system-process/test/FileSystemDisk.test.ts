@@ -1,7 +1,9 @@
 import { test, expect, jest } from '@jest/globals'
+import { constants } from 'node:fs'
 
 // Mock functions
 const mockCp = jest.fn()
+const mockAccess = jest.fn<(path: string, mode: number) => Promise<void>>()
 const mockReadFile = jest.fn()
 const mockWriteFile = jest.fn()
 const mockReaddir = jest.fn()
@@ -19,6 +21,7 @@ const mockGetFolderSizeInternal = jest.fn()
 
 // Setup all mocks at the top
 jest.unstable_mockModule('node:fs/promises', () => ({
+  access: mockAccess,
   chmod: mockChmod,
   cp: mockCp,
   mkdir: mockMkdir,
@@ -58,6 +61,31 @@ test('getPathSeparator should return forward slash', async (): Promise<void> => 
   const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
   const result = FileSystemDisk.getPathSeparator()
   expect(result).toBe('/')
+})
+
+test('isReadonly should return false when directory is writable', async (): Promise<void> => {
+  mockAccess.mockResolvedValue(undefined)
+  mockFileURLToPath.mockReturnValue('/test')
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  expect(await FileSystemDisk.isReadonly('file:///test')).toBe(false)
+  expect(mockAccess).toHaveBeenCalledWith('/test', constants.W_OK)
+})
+
+test.each(['EACCES', 'EROFS'])('isReadonly should return true for %s', async (code): Promise<void> => {
+  mockAccess.mockRejectedValue(Object.assign(new Error('readonly'), { code }))
+  mockFileURLToPath.mockReturnValue('/test')
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  expect(await FileSystemDisk.isReadonly('file:///test')).toBe(true)
+})
+
+test('isReadonly should preserve unexpected errors', async (): Promise<void> => {
+  mockAccess.mockRejectedValue(Object.assign(new Error('missing'), { code: 'ENOENT' }))
+  mockFileURLToPath.mockReturnValue('/test')
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  await expect(FileSystemDisk.isReadonly('file:///test')).rejects.toThrow('Failed to check whether "file:///test" is readonly')
 })
 
 test('copy should copy files successfully', async (): Promise<void> => {

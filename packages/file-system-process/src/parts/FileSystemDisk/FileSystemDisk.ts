@@ -1,4 +1,4 @@
-import { type Dirent, type Mode, existsSync } from 'node:fs'
+import { constants, type Dirent, type Mode, existsSync } from 'node:fs'
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
@@ -185,6 +185,20 @@ export const rename = async (oldUri: string, newUri: string): Promise<void> => {
 
 export const getPathSeparator = (): string => {
   return '/'
+}
+
+export const isReadonly = async (uri: string): Promise<boolean> => {
+  assertUri(uri)
+  const path = fileURLToPath(uri)
+  try {
+    await fs.access(path, constants.W_OK)
+    return false
+  } catch (error) {
+    if (error && (error.code === ErrorCodes.EACCES || error.code === ErrorCodes.EROFS)) {
+      return true
+    }
+    throw new VError(error, `Failed to check whether "${uri}" is readonly`)
+  }
 }
 
 export const stat = async (uri: string): Promise<number> => {
