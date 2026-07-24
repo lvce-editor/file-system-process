@@ -8,7 +8,7 @@ const readJson = async (path) => {
 }
 
 export const getWsVersionFromLockfile = async () => {
-  const lockfilePath = join(root, 'packages', 'file-system-process', 'package-lock.json')
+  const lockfilePath = join(root, 'package-lock.json')
   const lockfile = await readJson(lockfilePath)
 
   // ws is always installed as a dependency of @lvce-editor/rpc
