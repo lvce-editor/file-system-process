@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { constants, type Dirent, type Mode, existsSync } from 'node:fs'
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
@@ -45,6 +46,21 @@ export const readFile = async (uri: string, encoding: BufferEncoding = EncodingT
       throw new FileNotFoundError(uri)
     }
     throw new VError(error, `Failed to read file "${uri}"`)
+  }
+}
+
+export const getFileHash = async (uri: string): Promise<string> => {
+  try {
+    Assert.string(uri)
+    assertUri(uri)
+    const path = fileURLToPath(uri)
+    const content = await fs.readFile(path)
+    return createHash('sha256').update(content).digest('hex')
+  } catch (error) {
+    if (IsEnoentError.isEnoentError(error)) {
+      throw new FileNotFoundError(uri)
+    }
+    throw new VError(error, `Failed to hash file "${uri}"`)
   }
 }
 

@@ -154,6 +154,33 @@ test('readFile should read file with custom encoding', async (): Promise<void> =
   expect(mockReadFile).toHaveBeenCalledWith('/test.bin', 'binary')
 })
 
+test('getFileHash should return the sha256 hash', async (): Promise<void> => {
+  // @ts-ignore
+  mockReadFile.mockResolvedValue(Buffer.from('file content'))
+  // @ts-ignore
+  mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
+
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+  const result = await FileSystemDisk.getFileHash('file:///test.txt')
+
+  expect(mockFileURLToPath).toHaveBeenCalledWith('file:///test.txt')
+  expect(mockReadFile).toHaveBeenCalledWith('/test.txt')
+  expect(result).toBe('e0ac3601005dfa1864f5392aabaf7d898b1b5bab854f1acb4491bcd806b76b0c')
+})
+
+test('getFileHash should throw FileNotFoundError for missing file', async (): Promise<void> => {
+  const error = new Error('ENOENT')
+  // @ts-ignore
+  mockReadFile.mockRejectedValue(error)
+  mockIsEnoentError.mockReturnValue(true)
+  // @ts-ignore
+  mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
+
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  await expect(FileSystemDisk.getFileHash('file:///missing.txt')).rejects.toThrow('File not found')
+})
+
 test('readFile should throw FileNotFoundError for missing file', async (): Promise<void> => {
   const error = new Error('ENOENT')
   // @ts-ignore
