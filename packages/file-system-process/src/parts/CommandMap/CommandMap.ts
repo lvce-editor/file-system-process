@@ -11,6 +11,7 @@ export const commandMap = {
   'FileSystem.copy': FileSystemDisk.copy,
   'FileSystem.exists': FileSystemDisk.exists,
   'FileSystem.getFileHash': FileSystemDisk.getFileHash,
+  'FileSystem.getFileHashes': FileSystemDisk.getFileHashes,
   'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,
   'FileSystem.getPathSeparator': FileSystemDisk.getPathSeparator,
   'FileSystem.isReadonly': FileSystemDisk.isReadonly,
