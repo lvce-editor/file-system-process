@@ -181,6 +181,35 @@ test('getFileHash should throw FileNotFoundError for missing file', async (): Pr
   await expect(FileSystemDisk.getFileHash('file:///missing.txt')).rejects.toThrow('File not found')
 })
 
+test('getFileHashes should return hashes in uri order and null for missing files', async (): Promise<void> => {
+  // @ts-ignore
+  mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
+  // @ts-ignore
+  mockReadFile.mockImplementation(async (path: string) => {
+    if (path === '/missing.txt') {
+      throw new Error('ENOENT')
+    }
+    return Buffer.from(path)
+  })
+  mockIsEnoentError.mockImplementation((error: unknown) => error instanceof Error && error.message === 'ENOENT')
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  const result = await FileSystemDisk.getFileHashes(['file:///first.txt', 'file:///missing.txt', 'file:///second.txt'])
+
+  expect(result).toEqual([
+    '33b90cce76cc7c91dc57b14be407ed22ceb1c0a04911b021997ec9c6d2e81e08',
+    null,
+    '2f5babddddb5b319348271b962fad17ff9cabc2bb2a297262e02323e06a58ad2',
+  ])
+})
+
+test('getFileHashes should reject a non-array input', async (): Promise<void> => {
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  // @ts-expect-error Testing runtime input validation
+  await expect(FileSystemDisk.getFileHashes('file:///test.txt')).rejects.toThrow('uris must be an array')
+})
+
 test('readFile should throw FileNotFoundError for missing file', async (): Promise<void> => {
   const error = new Error('ENOENT')
   // @ts-ignore

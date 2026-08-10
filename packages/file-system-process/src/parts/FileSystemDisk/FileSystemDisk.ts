@@ -64,6 +64,36 @@ export const getFileHash = async (uri: string): Promise<string> => {
   }
 }
 
+const maxConcurrentFileHashes = 32
+
+export const getFileHashes = async (uris: readonly string[]): Promise<readonly (string | null)[]> => {
+  if (!Array.isArray(uris)) {
+    throw new TypeError('uris must be an array')
+  }
+  for (const uri of uris) {
+    Assert.string(uri)
+    assertUri(uri)
+  }
+  const hashes: Array<string | null> = []
+  for (let index = 0; index < uris.length; index++) {
+    hashes.push(null)
+  }
+  let nextIndex = 0
+  const hashNext = async (): Promise<void> => {
+    while (nextIndex < uris.length) {
+      const index = nextIndex++
+      try {
+        hashes[index] = await getFileHash(uris[index])
+      } catch {
+        hashes[index] = null
+      }
+    }
+  }
+  const workerCount = Math.min(maxConcurrentFileHashes, uris.length)
+  await Promise.all(Array.from({ length: workerCount }, hashNext))
+  return hashes
+}
+
 export const writeFile = async (uri: string, content: string, encoding: BufferEncoding = EncodingType.Utf8): Promise<void> => {
   try {
     assertUri(uri)
