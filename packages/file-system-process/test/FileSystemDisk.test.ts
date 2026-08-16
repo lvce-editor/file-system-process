@@ -158,6 +158,8 @@ test('readFile should read file with custom encoding', async (): Promise<void> =
 
 test('getFileHash should return the sha256 hash', async (): Promise<void> => {
   // @ts-ignore
+  mockStat.mockResolvedValue({ ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: 3n })
+  // @ts-ignore
   mockReadFile.mockResolvedValue(Buffer.from('file content'))
   // @ts-ignore
   mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
@@ -173,7 +175,7 @@ test('getFileHash should return the sha256 hash', async (): Promise<void> => {
 test('getFileHash should throw FileNotFoundError for missing file', async (): Promise<void> => {
   const error = new Error('ENOENT')
   // @ts-ignore
-  mockReadFile.mockRejectedValue(error)
+  mockStat.mockRejectedValue(error)
   mockIsEnoentError.mockReturnValue(true)
   // @ts-ignore
   mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
@@ -188,10 +190,14 @@ test('getFileHashes should return hashes in uri order and null for missing files
   mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
   // @ts-ignore
   mockReadFile.mockImplementation(async (path: string) => {
+    return Buffer.from(path)
+  })
+  // @ts-ignore
+  mockStat.mockImplementation(async (path: string) => {
     if (path === '/missing.txt') {
       throw new Error('ENOENT')
     }
-    return Buffer.from(path)
+    return { ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: BigInt(path.length) }
   })
   mockIsEnoentError.mockImplementation((error: unknown) => error instanceof Error && error.message === 'ENOENT')
   const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
@@ -203,6 +209,48 @@ test('getFileHashes should return hashes in uri order and null for missing files
     null,
     '2f5babddddb5b319348271b962fad17ff9cabc2bb2a297262e02323e06a58ad2',
   ])
+})
+
+test('getFileHash reuses a cached hash when file metadata is unchanged', async (): Promise<void> => {
+  mockFileURLToPath.mockReturnValue('/cached-hash.txt')
+  // @ts-ignore
+  mockStat.mockResolvedValue({ ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: 3n })
+  // @ts-ignore
+  mockReadFile.mockResolvedValue(Buffer.from('cached content'))
+  mockReadFile.mockClear()
+  mockStat.mockClear()
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  const first = await FileSystemDisk.getFileHash('file:///cached-hash.txt')
+  const second = await FileSystemDisk.getFileHash('file:///cached-hash.txt')
+
+  expect(second).toBe(first)
+  expect(mockReadFile).toHaveBeenCalledTimes(1)
+  expect(mockStat).toHaveBeenCalledTimes(3)
+})
+
+test('getFileHash reads the file again when metadata changes', async (): Promise<void> => {
+  mockFileURLToPath.mockReturnValue('/changed-hash.txt')
+  const stats = [
+    { ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: 3n },
+    { ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: 3n },
+    { ctimeNs: 6n, dev: 1n, ino: 2n, mtimeNs: 5n, size: 4n },
+    { ctimeNs: 6n, dev: 1n, ino: 2n, mtimeNs: 5n, size: 4n },
+  ]
+  // @ts-ignore
+  mockStat.mockImplementation(async () => stats.shift())
+  // @ts-ignore
+  mockReadFile.mockResolvedValueOnce(Buffer.from('old')).mockResolvedValueOnce(Buffer.from('new'))
+  mockReadFile.mockClear()
+  mockStat.mockClear()
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  const first = await FileSystemDisk.getFileHash('file:///changed-hash.txt')
+  const second = await FileSystemDisk.getFileHash('file:///changed-hash.txt')
+
+  expect(second).not.toBe(first)
+  expect(mockReadFile).toHaveBeenCalledTimes(2)
+  expect(mockStat).toHaveBeenCalledTimes(4)
 })
 
 test('getFileHashes should reject a non-array input', async (): Promise<void> => {
