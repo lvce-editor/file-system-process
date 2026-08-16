@@ -8,6 +8,7 @@ const mockReadFile = jest.fn()
 const mockWriteFile = jest.fn()
 const mockReaddir = jest.fn()
 const mockMkdir = jest.fn()
+const mockLstat = jest.fn()
 const mockRename = jest.fn()
 const mockStat = jest.fn()
 const mockChmod = jest.fn()
@@ -24,6 +25,7 @@ jest.unstable_mockModule('node:fs/promises', () => ({
   access: mockAccess,
   chmod: mockChmod,
   cp: mockCp,
+  lstat: mockLstat,
   mkdir: mockMkdir,
   readdir: mockReaddir,
   readFile: mockReadFile,
@@ -298,6 +300,42 @@ test('remove should throw VError when trash fails', async (): Promise<void> => {
 
   const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
   await expect(FileSystemDisk.remove('file:///test.txt')).rejects.toThrow('Failed to remove "file:///test.txt"')
+})
+
+test('forceRemove permanently removes a directory without following symbolic links', async (): Promise<void> => {
+  mockFileURLToPath.mockReturnValue('/test')
+  // @ts-ignore
+  mockLstat.mockResolvedValue({ isDirectory: () => true, isSymbolicLink: () => false })
+  // @ts-ignore
+  mockRm.mockResolvedValue(undefined)
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  await FileSystemDisk.forceRemove('file:///test')
+
+  expect(mockRm).toHaveBeenCalledWith('/test', { force: false, recursive: true })
+})
+
+test('forceRemove removes a symbolic link without recursively traversing it', async (): Promise<void> => {
+  mockFileURLToPath.mockReturnValue('/test-link')
+  // @ts-ignore
+  mockLstat.mockResolvedValue({ isDirectory: () => false, isSymbolicLink: () => true })
+  // @ts-ignore
+  mockRm.mockResolvedValue(undefined)
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  await FileSystemDisk.forceRemove('file:///test-link')
+
+  expect(mockRm).toHaveBeenCalledWith('/test-link', { force: false, recursive: false })
+})
+
+test.each(['/', '~', '/home/user'])('forceRemove rejects protected path %s', async (path): Promise<void> => {
+  mockRm.mockClear()
+  mockFileURLToPath.mockReturnValue(path)
+  mockHomedir.mockReturnValue('/home/user')
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  await expect(FileSystemDisk.forceRemove(`file://${path}`)).rejects.toThrow('Cannot remove a filesystem root or home directory')
+  expect(mockRm).not.toHaveBeenCalled()
 })
 
 test('readDirWithFileTypes should read directory successfully', async (): Promise<void> => {

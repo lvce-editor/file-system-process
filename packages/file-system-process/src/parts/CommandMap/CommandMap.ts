@@ -10,6 +10,7 @@ export const commandMap = {
   'FileSystem.chmod': FileSystemDisk.chmod,
   'FileSystem.copy': FileSystemDisk.copy,
   'FileSystem.exists': FileSystemDisk.exists,
+  'FileSystem.forceRemove': FileSystemDisk.forceRemove,
   'FileSystem.getFileHash': FileSystemDisk.getFileHash,
   'FileSystem.getFileHashes': FileSystemDisk.getFileHashes,
   'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,

@@ -170,6 +170,23 @@ export const remove = async (uri: string): Promise<void> => {
   }
 }
 
+export const forceRemove = async (uri: string): Promise<void> => {
+  assertUri(uri)
+  const path = fileURLToPath(uri)
+  if (!isOkayToRemove(path)) {
+    throw new Error('Cannot remove a filesystem root or home directory')
+  }
+  try {
+    const stats = await fs.lstat(path)
+    await fs.rm(path, {
+      force: false,
+      recursive: stats.isDirectory() && !stats.isSymbolicLink(),
+    })
+  } catch (error) {
+    throw new VError(error, `Failed to permanently remove "${uri}"`)
+  }
+}
+
 const toPrettyDirent = (dirent: Readonly<Dirent>): unknown => {
   return {
     name: dirent.name,
