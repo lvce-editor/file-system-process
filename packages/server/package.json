@@ -10,6 +10,6 @@
     "postinstall": "node src/postinstall.js"
   },
   "dependencies": {
-    "@lvce-editor/server": "^0.99.14"
+    "@lvce-editor/server": "^0.103.19"
   }
 }
