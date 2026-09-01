@@ -8,6 +8,7 @@ import * as Assert from '../Assert/Assert.ts'
 import { assertUri } from '../AssertUri/AssertUri.ts'
 import * as EncodingType from '../EncodingType/EncodingType.ts'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
+import * as FileHashCache from '../FileHashCache/FileHashCache.ts'
 import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.ts'
 import * as GetDirentType from '../GetDirentType/GetDirentType.ts'
 import * as GetFolderSizeInternal from '../GetFolderSizeInternal/GetFolderSizeInternal.ts'
@@ -49,48 +50,20 @@ export const readFile = async (uri: string, encoding: BufferEncoding = EncodingT
   }
 }
 
-interface FileHashCacheEntry {
-  readonly fingerprint: string
-  readonly hash: string
-}
-
-const fileHashCache = new Map<string, FileHashCacheEntry>()
-const maxFileHashCacheEntries = 50_000
-
 const getFileFingerprint = (stats: BigIntStats): string => {
   return `${stats.dev}:${stats.ino}:${stats.size}:${stats.mtimeNs}:${stats.ctimeNs}`
 }
 
-const getCachedFileHash = (path: string, fingerprint: string): string | undefined => {
-  const entry = fileHashCache.get(path)
-  if (!entry || entry.fingerprint !== fingerprint) {
-    return undefined
-  }
-  fileHashCache.delete(path)
-  fileHashCache.set(path, entry)
-  return entry.hash
-}
-
-const setCachedFileHash = (path: string, fingerprint: string, hash: string): void => {
-  fileHashCache.delete(path)
-  fileHashCache.set(path, { fingerprint, hash })
-  if (fileHashCache.size <= maxFileHashCacheEntries) {
-    return
-  }
-  const oldestPath = fileHashCache.keys().next().value
-  if (oldestPath) {
-    fileHashCache.delete(oldestPath)
-  }
-}
-
 export const getFileHash = async (uri: string): Promise<string> => {
+  let path = ''
   try {
     Assert.string(uri)
     assertUri(uri)
-    const path = fileURLToPath(uri)
+    path = fileURLToPath(uri)
+    await FileHashCache.ensureLoaded()
     const statsBeforeRead = await fs.stat(path, { bigint: true })
     const fingerprintBeforeRead = getFileFingerprint(statsBeforeRead)
-    const cachedHash = getCachedFileHash(path, fingerprintBeforeRead)
+    const cachedHash = FileHashCache.get(path, fingerprintBeforeRead)
     if (cachedHash) {
       return cachedHash
     }
@@ -99,11 +72,14 @@ export const getFileHash = async (uri: string): Promise<string> => {
     const statsAfterRead = await fs.stat(path, { bigint: true })
     const fingerprintAfterRead = getFileFingerprint(statsAfterRead)
     if (fingerprintBeforeRead === fingerprintAfterRead) {
-      setCachedFileHash(path, fingerprintAfterRead, hash)
+      FileHashCache.set(path, fingerprintAfterRead, hash)
     }
     return hash
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
+      if (path) {
+        FileHashCache.remove(path)
+      }
       throw new FileNotFoundError(uri)
     }
     throw new VError(error, `Failed to hash file "${uri}"`)
@@ -137,6 +113,7 @@ export const getFileHashes = async (uris: readonly string[]): Promise<readonly (
   }
   const workerCount = Math.min(maxConcurrentFileHashes, uris.length)
   await Promise.all(Array.from({ length: workerCount }, hashNext))
+  await FileHashCache.flush()
   return hashes
 }
 
