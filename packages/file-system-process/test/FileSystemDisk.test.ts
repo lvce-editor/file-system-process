@@ -1,5 +1,6 @@
 import { test, expect, jest } from '@jest/globals'
 import { constants } from 'node:fs'
+import { join } from 'node:path'
 
 // Mock functions
 const mockCp = jest.fn()
@@ -211,6 +212,50 @@ test('getFileHashes should return hashes in uri order and null for missing files
   ])
 })
 
+test('getFileHashes reuses persisted hashes after an in-memory cache reset', async (): Promise<void> => {
+  const cacheDirectory = join('cache', 'lvce')
+  const cachePath = join(cacheDirectory, 'file-system-process', 'file-hashes-v1.json')
+  let manifest = ''
+  let sourceReads = 0
+  // @ts-ignore
+  mockFileURLToPath.mockImplementation((url: string): string => url.replace('file://', ''))
+  // @ts-ignore
+  mockReadFile.mockImplementation(async (path: string) => {
+    if (path === cachePath) {
+      if (!manifest) {
+        throw new Error('ENOENT')
+      }
+      return manifest
+    }
+    sourceReads++
+    return Buffer.from('export const value = 1')
+  })
+  // @ts-ignore
+  mockWriteFile.mockImplementation(async (_path: string, content: string) => {
+    manifest = content
+  })
+  // @ts-ignore
+  mockMkdir.mockResolvedValue(undefined)
+  // @ts-ignore
+  mockRename.mockResolvedValue(undefined)
+  // @ts-ignore
+  mockStat.mockResolvedValue({ ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: 22n })
+  mockIsEnoentError.mockImplementation((error: unknown) => error instanceof Error && error.message === 'ENOENT')
+  mockStat.mockClear()
+  const FileHashCache = await import('../src/parts/FileHashCache/FileHashCache.js')
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+  FileHashCache.configure(cacheDirectory)
+
+  const coldHashes = await FileSystemDisk.getFileHashes(['file:///workspace/file.ts'])
+  FileHashCache.configure(cacheDirectory)
+  const warmHashes = await FileSystemDisk.getFileHashes(['file:///workspace/file.ts'])
+  FileHashCache.configure()
+
+  expect(warmHashes).toEqual(coldHashes)
+  expect(sourceReads).toBe(1)
+  expect(mockStat).toHaveBeenCalledTimes(3)
+})
+
 test('getFileHash reuses a cached hash when file metadata is unchanged', async (): Promise<void> => {
   mockFileURLToPath.mockReturnValue('/cached-hash.txt')
   // @ts-ignore
@@ -249,6 +294,50 @@ test('getFileHash reads the file again when metadata changes', async (): Promise
   const second = await FileSystemDisk.getFileHash('file:///changed-hash.txt')
 
   expect(second).not.toBe(first)
+  expect(mockReadFile).toHaveBeenCalledTimes(2)
+  expect(mockStat).toHaveBeenCalledTimes(4)
+})
+
+test.each(['dev', 'ino', 'size', 'mtimeNs', 'ctimeNs'] as const)(
+  'getFileHash invalidates the cache when %s changes',
+  async (field): Promise<void> => {
+    mockFileURLToPath.mockReturnValue(`/changed-${field}.txt`)
+    const initialStats = { ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: 3n }
+    const changedStats = { ...initialStats, [field]: initialStats[field] + 1n }
+    const stats = [initialStats, initialStats, changedStats, changedStats]
+    mockStat.mockImplementation(async () => stats.shift())
+    // @ts-ignore
+    mockReadFile.mockResolvedValueOnce(Buffer.from('old')).mockResolvedValueOnce(Buffer.from('new'))
+    mockReadFile.mockClear()
+    mockStat.mockClear()
+    const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+    const first = await FileSystemDisk.getFileHash(`file:///changed-${field}.txt`)
+    const second = await FileSystemDisk.getFileHash(`file:///changed-${field}.txt`)
+
+    expect(second).not.toBe(first)
+    expect(mockReadFile).toHaveBeenCalledTimes(2)
+  },
+)
+
+test('getFileHash does not cache a hash when the file changes during the read', async (): Promise<void> => {
+  mockFileURLToPath.mockReturnValue('/changed-during-read.txt')
+  const stats = [
+    { ctimeNs: 5n, dev: 1n, ino: 2n, mtimeNs: 4n, size: 3n },
+    { ctimeNs: 6n, dev: 1n, ino: 2n, mtimeNs: 5n, size: 4n },
+    { ctimeNs: 6n, dev: 1n, ino: 2n, mtimeNs: 5n, size: 4n },
+    { ctimeNs: 6n, dev: 1n, ino: 2n, mtimeNs: 5n, size: 4n },
+  ]
+  mockStat.mockImplementation(async () => stats.shift())
+  // @ts-ignore
+  mockReadFile.mockResolvedValueOnce(Buffer.from('old')).mockResolvedValueOnce(Buffer.from('new'))
+  mockReadFile.mockClear()
+  mockStat.mockClear()
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  await FileSystemDisk.getFileHash('file:///changed-during-read.txt')
+  await FileSystemDisk.getFileHash('file:///changed-during-read.txt')
+
   expect(mockReadFile).toHaveBeenCalledTimes(2)
   expect(mockStat).toHaveBeenCalledTimes(4)
 })
