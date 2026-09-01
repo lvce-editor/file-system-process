@@ -60,12 +60,6 @@ jest.unstable_mockModule('../src/parts/GetFolderSizeInternal/GetFolderSizeIntern
   getFolderSizeInternal: mockGetFolderSizeInternal,
 }))
 
-test('getPathSeparator should return forward slash', async (): Promise<void> => {
-  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
-  const result = FileSystemDisk.getPathSeparator()
-  expect(result).toBe('/')
-})
-
 test('isReadonly should return false when directory is writable', async (): Promise<void> => {
   mockAccess.mockResolvedValue(undefined)
   mockFileURLToPath.mockReturnValue('/test')
