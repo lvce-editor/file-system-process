@@ -269,10 +269,6 @@ export const rename = async (oldUri: string, newUri: string): Promise<void> => {
   }
 }
 
-export const getPathSeparator = (): string => {
-  return '/'
-}
-
 export const isReadonly = async (uri: string): Promise<boolean> => {
   assertUri(uri)
   const path = fileURLToPath(uri)

@@ -14,7 +14,6 @@ export const commandMap = {
   'FileSystem.getFileHash': FileSystemDisk.getFileHash,
   'FileSystem.getFileHashes': FileSystemDisk.getFileHashes,
   'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,
-  'FileSystem.getPathSeparator': FileSystemDisk.getPathSeparator,
   'FileSystem.isReadonly': FileSystemDisk.isReadonly,
   'FileSystem.mkdir': FileSystemDisk.mkdir,
   'FileSystem.readDirWithFileTypes': FileSystemDisk.readDirWithFileTypes,
