@@ -60,6 +60,17 @@ jest.unstable_mockModule('../src/parts/GetFolderSizeInternal/GetFolderSizeIntern
   getFolderSizeInternal: mockGetFolderSizeInternal,
 }))
 
+test('getFileSize returns the file size without reading its contents', async (): Promise<void> => {
+  mockFileURLToPath.mockReturnValue('/test.txt')
+  // @ts-ignore
+  mockStat.mockResolvedValue({ size: 1024 })
+  const FileSystemDisk = await import('../src/parts/FileSystemDisk/FileSystemDisk.js')
+
+  await expect(FileSystemDisk.getFileSize('file:///test.txt')).resolves.toBe(1024)
+  expect(mockStat).toHaveBeenCalledWith('/test.txt')
+  expect(mockReadFile).not.toHaveBeenCalled()
+})
+
 test('isReadonly should return false when directory is writable', async (): Promise<void> => {
   mockAccess.mockResolvedValue(undefined)
   mockFileURLToPath.mockReturnValue('/test')
