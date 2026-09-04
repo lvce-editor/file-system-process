@@ -13,6 +13,7 @@ export const commandMap = {
   'FileSystem.forceRemove': FileSystemDisk.forceRemove,
   'FileSystem.getFileHash': FileSystemDisk.getFileHash,
   'FileSystem.getFileHashes': FileSystemDisk.getFileHashes,
+  'FileSystem.getFileSize': FileSystemDisk.getFileSize,
   'FileSystem.getFolderSize': FileSystemDisk.getFolderSize,
   'FileSystem.isReadonly': FileSystemDisk.isReadonly,
   'FileSystem.mkdir': FileSystemDisk.mkdir,

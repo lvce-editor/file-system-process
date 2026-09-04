@@ -117,6 +117,13 @@ export const getFileHashes = async (uris: readonly string[]): Promise<readonly (
   return hashes
 }
 
+export const getFileSize = async (uri: string): Promise<number> => {
+  assertUri(uri)
+  const path = fileURLToPath(uri)
+  const stats = await fs.stat(path)
+  return stats.size
+}
+
 export const writeFile = async (uri: string, content: string, encoding: BufferEncoding = EncodingType.Utf8): Promise<void> => {
   try {
     assertUri(uri)
