@@ -7,13 +7,14 @@ export const getFolderSizeInternal = async (path: string): Promise<number> => {
   }
   let total = 0
   try {
-    const stats = await fs.stat(path)
-    total += stats.size
-    if (stats.isDirectory() && !stats.isSymbolicLink()) {
+    const stats = await fs.lstat(path)
+    if (stats.isDirectory()) {
       const dirents = await fs.readdir(path)
       for (const dirent of dirents) {
         total += await getFolderSizeInternal(join(path, dirent))
       }
+    } else {
+      total += stats.size
     }
   } catch {
     return 0
