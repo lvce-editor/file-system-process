@@ -28,10 +28,13 @@ test('getFolderSizeInternal counts file and symlink sizes without following syml
     await symlink('.', loopLink)
 
     const result = await GetFolderSizeInternal.getFolderSizeInternal(directory)
-    const expected =
-      (await lstat(file)).size + (await lstat(nestedFile)).size + (await lstat(fileLink)).size + (await lstat(loopLink)).size
+    const fileStats = await lstat(file)
+    const nestedFileStats = await lstat(nestedFile)
+    const fileLinkStats = await lstat(fileLink)
+    const loopLinkStats = await lstat(loopLink)
+    const expected = fileStats.size + nestedFileStats.size + fileLinkStats.size + loopLinkStats.size
     expect(result).toBe(expected)
   } finally {
-    await rm(directory, { recursive: true, force: true })
+    await rm(directory, { force: true, recursive: true })
   }
 })
