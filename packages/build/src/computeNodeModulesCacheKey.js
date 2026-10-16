@@ -5,6 +5,7 @@ import { root } from './root.js'
 
 const locations = [
   'package.json',
+  '.nvmrc',
   'package-lock.json',
   '.github/workflows/pr.yml',
   '.github/workflows/ci.yml',
