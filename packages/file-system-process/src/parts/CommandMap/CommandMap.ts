@@ -1,5 +1,6 @@
 import * as FileSystemDisk from '../FileSystemDisk/FileSystemDisk.ts'
 import * as FileWatcher from '../FileWatcher/FileWatcher.ts'
+import * as GetDirectoryVersion from '../GetDirectoryVersion/GetDirectoryVersion.ts'
 import * as HandleElectronMessagePort from '../HandleElectronMessagePort/HandleElectronMessagePort.ts'
 import * as HandleWebSocket from '../HandleWebSocket/HandleWebSocket.ts'
 import * as Initialize from '../Initialize/Initialize.ts'
@@ -11,6 +12,7 @@ export const commandMap = {
   'FileSystem.copy': FileSystemDisk.copy,
   'FileSystem.exists': FileSystemDisk.exists,
   'FileSystem.forceRemove': FileSystemDisk.forceRemove,
+  'FileSystem.getDirectoryVersion': GetDirectoryVersion.getDirectoryVersion,
   'FileSystem.getFileHash': FileSystemDisk.getFileHash,
   'FileSystem.getFileHashes': FileSystemDisk.getFileHashes,
   'FileSystem.getFileSize': FileSystemDisk.getFileSize,
