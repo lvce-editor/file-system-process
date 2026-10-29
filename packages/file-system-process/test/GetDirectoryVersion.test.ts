@@ -1,10 +1,13 @@
 import type { BigIntStats } from 'node:fs'
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const stat = jest.fn<(path: string, options: Readonly<{ bigint: true }>) => Promise<BigIntStats>>()
 jest.unstable_mockModule('node:fs/promises', () => ({ stat }))
 const { getDirectoryVersion } = await import('../src/parts/GetDirectoryVersion/GetDirectoryVersion.ts')
 
+const uri = pathToFileURL(resolve('workspace')).href
 const oldTime = BigInt(Date.now() - 10_000) * 1_000_000n
 const directory = {
   birthtimeNs: 1n,
@@ -22,9 +25,9 @@ beforeEach(() => {
 })
 
 test('unchanged directories have a serializable stable version without listing entries', async () => {
-  const first = await getDirectoryVersion('file:///workspace')
+  const first = await getDirectoryVersion(uri)
   expect(typeof first).toBe('string')
-  expect(await getDirectoryVersion('file:///workspace')).toBe(first)
+  expect(await getDirectoryVersion(uri)).toBe(first)
   expect(stat).toHaveBeenCalledWith(expect.any(String), { bigint: true })
   expect(JSON.stringify(first)).toContain(first!)
 })
@@ -32,31 +35,31 @@ test('unchanged directories have a serializable stable version without listing e
 test.each(['dev', 'ino', 'size', 'mtimeNs', 'ctimeNs', 'birthtimeNs'] as const)(
   'changing %s invalidates a listing, including nanosecond changes',
   async (field) => {
-    const first = await getDirectoryVersion('file:///workspace')
+    const first = await getDirectoryVersion(uri)
     stat.mockResolvedValue({ ...directory, [field]: directory[field] + 1n })
-    expect(await getDirectoryVersion('file:///workspace')).not.toBe(first)
+    expect(await getDirectoryVersion(uri)).not.toBe(first)
   },
 )
 
 test.each(['mtimeNs', 'ctimeNs'] as const)('recent %s disables caching during a timestamp tick', async (field) => {
   stat.mockResolvedValue({ ...directory, [field]: BigInt(Date.now()) * 1_000_000n })
-  expect(await getDirectoryVersion('file:///workspace')).toBeNull()
+  expect(await getDirectoryVersion(uri)).toBeNull()
 })
 
 test('future timestamps disable caching', async () => {
   stat.mockResolvedValue({ ...directory, mtimeNs: BigInt(Date.now() + 10_000) * 1_000_000n })
-  expect(await getDirectoryVersion('file:///workspace')).toBeNull()
+  expect(await getDirectoryVersion(uri)).toBeNull()
 })
 
 test('files do not have listing validators', async () => {
   stat.mockResolvedValue({ ...directory, isDirectory: () => false })
-  expect(await getDirectoryVersion('file:///workspace/file')).toBeNull()
+  expect(await getDirectoryVersion(`${uri}/file`)).toBeNull()
 })
 
 test('filesystem errors are preserved for the caller to handle', async () => {
   const error = new Error('ENOENT')
   stat.mockRejectedValue(error)
-  await expect(getDirectoryVersion('file:///missing')).rejects.toBe(error)
+  await expect(getDirectoryVersion(`${uri}/missing`)).rejects.toBe(error)
 })
 
 test('invalid non-file URIs are rejected before filesystem access', async () => {
